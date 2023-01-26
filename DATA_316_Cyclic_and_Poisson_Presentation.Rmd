@@ -1,5 +1,5 @@
 ---
-title: "DATA_316_Cyclic_Presentation"
+title: "DATA_316_Cyclic_Poisson_Presentation"
 author: "Riley,Emily,Iyanu,Bryan"
 date: "2023-01-24"
 output: html_document
@@ -14,5 +14,3 @@ library(tidyverse)
 ```{r}
 suntimes <- read.csv("https://raw.githubusercontent.com/gmtanner-cord/DATA316/main/Data/MoorheadSunriseSunset.csv",stringsAsFactors = TRUE)
 ```
-
-can you see this text?
