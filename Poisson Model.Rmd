@@ -1,0 +1,49 @@
+---
+title: "Poisson Model"
+author: "Emily, Bryan, Iyannu, Riley"
+date: "2023-01-26"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+```
+
+
+# Model Characteristics
+
+# Type of data to use
+The poisson distribution calculates the probability of an event occurring in a known span of time or space. As long as the time or space is constant, like every minute or at every mile, this distribution can be used.
+
+This is a discrete distribution and should only be used to predict the probability of one kind of event occurring. Events can be anything like the amount of calls received every minute or the amount of purchases made in an hour.
+
+Like the binomial distribution, all events have to be independent. Someone calling a call center is not dependent on who else has called the call center.
+
+The last thing needed to use the Poisson distribution is the average number of events occurring in the time or space frame. This is the only parameter, lambda. 
+
+# Visualize the mass/density function
+
+```{r}
+range <- 0:20
+lambda_range <- 1:10
+
+for (lambda in lambda_range)
+{
+  plot( range,dpois(range,lambda), type = "b", main = c("lambda = ",lambda), ylab = "probability of event", xlab = "number of times the event occurrs")
+}
+
+```
+
+
+# Interpreting the parameters
+
+# Sources: 
+
+Most of this information was gathered from outside sources. 
+
+Scribblr: https://www.scribbr.com/statistics/poisson-distribution/
+
+
+*For each of the following probability models/distributions, give some essential information on the model.  What are its characteristics (e.g. mass/density function, expected value, variance)?  What type of data is it typically used to model?  Include a graph of the density/mass function, and explain how each parameter can be interpreted in the model.  Give enough detail so that an uninformed reader can follow what you're doing.*
