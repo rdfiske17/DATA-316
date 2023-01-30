@@ -1,6 +1,6 @@
 ---
 title: "Poisson Model"
-author: "Emily, Bryan, Iyannu, Riley"
+author: "Emily, Bryan, Iyanu, Riley"
 date: "2023-01-26"
 output: html_document
 ---
