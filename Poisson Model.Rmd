@@ -32,12 +32,22 @@ lambda_range <- 1:10
 for (lambda in lambda_range)
 {
   plot( range,dpois(range,lambda), type = "b", main = c("lambda = ",lambda), ylab = "probability of event", xlab = "number of times the event occurrs")
+  
+summary(lambda)  
 }
 
 ```
 
 
 # Interpreting the parameters
+
+The peak of the distribution represents the most probable number of events (mode). 
+
+If the distribution is longer on the right side of its peak than its left, then the lambda is low. For instance, the graphs of the probability lambda 2, 3, 4, 5 and 6 above are right-skewed.
+
+On the other hand, if the distribution is much longer on the left side of its peak then its right, then the lambda increases and looks more similar to a normal distribution, e.g., the graphs of the probability lambda 7, 8, 9, and 10 above are looking more as though there is a normal distribution.
+
+The mean and variance are represented by lambda (λ). This differs from most distributions that use σ² and µ. 
 
 # Sources: 
 
