@@ -1,0 +1,101 @@
+---
+title: "Homework_3_Math_Probability_Model"
+output: html_document
+date: "`r Sys.Date()`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lubridate)
+```
+```{r}
+MoorheadSunriseSunset <- read_csv("https://raw.githubusercontent.com/gmtanner-cord/DATA316/main/Data/MoorheadSunriseSunset.csv") %>%
+  mutate(across(Date,parse_date,format="%m/%d/%Y")) %>%
+mutate(SunriseHR =floor(`Sunrise CST`/100))  %>%
+  mutate(SunriseMin = `Sunrise CST`-100*SunriseHR) %>%
+mutate(SunsetHR =floor(`Sunset CST`/100))  %>% 
+  mutate(SunsetMin = `Sunset CST`-100*SunsetHR) %>%
+  mutate(SunriseTime= SunriseHR +SunriseMin/60) %>%
+ mutate(SunsetTime= SunsetHR +SunsetMin/60) %>%
+  mutate(DOY=yday(Date))
+str(MoorheadSunriseSunset)
+MoorheadSunriseSunset
+
+```
+
+```{r}
+ggplot(MoorheadSunriseSunset,aes(x=Date))+
+  labs(title = "Cyclic",
+       x = "Date",
+       y ="Sunrise")+
+  geom_line(aes(y=SunriseTime))
+  
+
+```
+
+
+
+$$ y = a \sin(bt - c) + d $$
+`data= MoorheadSunriseSunset`
+`start=list(a= amplitide b=2π/b, c=horizontal shift , d=vertical shift)`
+##formular: `Sunrise_CST ~ a+d sin(2π/b(x-c))`
+
+##change it to reflect cyclic/periodic
+```{r}
+mod.Sunrise = nls(SunriseTime ~ d+a*sin(b*DOY-c), data=MoorheadSunriseSunset,control=list(warnOnly=TRUE),start=list(a=1.75, d=6.5, b=2*3.14/365, c= -3.14/2))
+mod.Sunrise
+
+mod.Sunset = nls(SunsetTime ~ d+a*sin(b*DOY-c), data=MoorheadSunriseSunset,control=list(warnOnly=TRUE),start=list(a=1.75, d=6.5, b=2*3.14/365, c= -3.14/2))
+mod.Sunset
+
+##MoorheadSunriseSunset$predictedQ = predict(mod.Sunrise)
+##MoorheadSunriseSunset$predictedQ = predict(mod.Sunset)
+```
+
+
+
+
+```{r}
+coef(mod.Sunset)
+summary(mod.Sunset)
+predict(mod.Sunset)
+residuals(mod.Sunset)
+
+```
+```{r}
+ggplot(MoorheadSunriseSunset,aes(x=Date))+
+  labs(title = "Cyclic",
+       x = "Date",
+       y ="Sunrise")+
+  geom_line(aes(y=SunriseTime))+
+  geom_line(aes(y=predict(mod.Sunrise)), color= "green")
+```
+
+
+```{r}
+coef(mod.Sunrise)
+summary(mod.Sunrise)
+predict(mod.Sunrise)
+residuals(mod.Sunrise)
+
+```
+```{r}
+ggplot(MoorheadSunriseSunset,aes(x=Date))+
+  labs(title = "Cyclic",
+       x = "Date",
+       y ="Sunset")+
+  geom_line(aes(y=SunsetTime))+
+  geom_line(aes(y=predict(mod.Sunset)), color= "blue")
+```
+
+```{r}
+##To show pattern in rises and falls that are not of fixed period.
+
+##During signal processing
+
+##They are used in sciences ( to describe waves)
+
+```
+
+
