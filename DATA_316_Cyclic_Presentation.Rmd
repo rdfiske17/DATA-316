@@ -1,0 +1,48 @@
+---
+title: "DATA_316_Cyclic_Presentation"
+author: "Riley,Emily,Iyanu,Bryan"
+date: "2023-01-24"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+```
+
+# Read in the Sunrise Dataset
+
+```{r}
+suntimes <- read.csv("https://raw.githubusercontent.com/gmtanner-cord/DATA316/main/Data/MoorheadSunriseSunset.csv",stringsAsFactors = TRUE)
+suntimes$Date <- as.Date(suntimes$Date,format="%m/%d/%Y") #https://www.statology.org/convert-strings-to-dates-in-r/
+suntimes <- suntimes %>% mutate(Day=as.POSIXlt(Date)$yday+1) #https://rc2e.com/stringsanddates
+suntimes$Day <- as.integer(suntimes$Day)
+```
+
+# Configure the initial Cyclic statistical model
+```{r}
+
+sunrise_model <- nls(Sunrise.CST ~ a * sin((b * Day) - c) + d,suntimes,start=list(a=mean((max(suntimes$Sunrise.CST)-mean(suntimes$Sunrise.CST))+(min(suntimes$Sunrise.CST)+mean(suntimes$Sunrise.CST))), b=(365/(2*pi)), c=182.5, d=mean(suntimes$Sunrise.CST)))
+sunrise_model
+
+mean((max(suntimes$Sunrise.CST)-mean(suntimes$Sunrise.CST))+(min(suntimes$Sunrise.CST)+mean(suntimes$Sunrise.CST)))
+mean(suntimes$Sunrise.CST)
+
+suntimes$sunrise_predicted <- predict(sunrise_model)
+
+ggplot(suntimes,mapping=aes(x=Day,y=Sunrise.CST)) +
+  geom_point() +
+  geom_line(mapping=aes(x=Day,y=sunrise_predicted))
+
+```
+
+# Influence of the Coefficients
+
+For $$ y = a \sin(bt - c) + d $$ , a is the amplitude, b is the period times 2$$pi$$, c is the phase shift, and d is the vertical shift.
+Thus for selecting values for our model:
+
+- Let a = mean((max(Sunrise.CST)-mean(Sunrise.CST))+(min(Sunrise.CST)+mean(Sunrise.CST))), or in other words, the average of the distance from the maximum to the mean and from the minimum to the mean
+- Let b = 365/2pi, or a full range of days in a year since that is our period
+- Let c = 182.5, or half a year to start the sine graph off at the maximum of the wave
+- Let d = mean(Sunrise.CST), or the middle of the data
