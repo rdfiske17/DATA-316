@@ -28,6 +28,7 @@ sunrise_model
 
 mean((max(suntimes$Sunrise.CST)-mean(suntimes$Sunrise.CST))+(min(suntimes$Sunrise.CST)+mean(suntimes$Sunrise.CST)))
 mean(suntimes$Sunrise.CST)
+min(suntimes$Sunrise.CST)
 
 suntimes$sunrise_predicted <- predict(sunrise_model)
 
@@ -39,11 +40,35 @@ ggplot(suntimes,mapping=aes(x=Day,y=Sunrise.CST)) +
 
 # Influence of the Coefficients
 
-For $$ y = a \sin(bt - c) + d $$ , a is the amplitude, b is the period times 2$$pi$$, c is the phase shift, and d is the vertical shift. (source: http://jwilson.coe.uga.edu/EMAT6680Fa09/Gonterman/Gonterman1/Gonterman1.html)
-Thus for selecting values for our model:
+For $$ y = a \sin(bt - c) + d $$ , a is the amplitude, b is the period times 2$$\pi$$, c is the phase shift, and d is the vertical shift. (source: http://jwilson.coe.uga.edu/EMAT6680Fa09/Gonterman/Gonterman1/Gonterman1.html)
+Thus for selecting values for our model (used desmos for fitting to our dataset: https://www.desmos.com/calculator/ueu84lwtkn
 
 
-- Let a = mean((max(Sunrise.CST)-mean(Sunrise.CST))+(min(Sunrise.CST)+mean(Sunrise.CST))), or in other words, the average of the distance from the maximum to the mean and from the minimum to the mean
-- Let b = 365/2pi, or a full range of days in a year since that is our period
-- Let c = 182.5, or half a year to start the sine graph off at the maximum of the wave
-- Let d = mean(Sunrise.CST), or the middle of the data
+- Let a = 190
+- Let b = 1/(2pi*9.24)
+- Let c = 4.7
+- Let d = 622
+
+Why these values?
+622 = mean(max(Sunrise.CST),min(Sunrise.CST)) (d will be the point at which our sine wave is halfway between max and min)
+190 = max(Sunrise.CST)-622 (the range that needs to be on either side of d, so that our maximum point is equal to the maximum point and our minimum point is equal to the minimum point in our dataset)
+b & c were found using the sliders on Desmos to match the general shape that we want the curve to fit (365=period*(3/4))
+
+
+# Second Attempt at Model
+```{r}
+
+sunrise_model <- nls(Sunrise.CST ~ a * sin((b * Day) - c) + d,suntimes,start=list(a=190,b=1/(2*pi*9.24),c=4.7, d=622))
+sunrise_model
+
+mean((max(suntimes$Sunrise.CST)-mean(suntimes$Sunrise.CST))+(min(suntimes$Sunrise.CST)+mean(suntimes$Sunrise.CST)))
+mean(suntimes$Sunrise.CST)
+
+suntimes$sunrise_predicted <- predict(sunrise_model)
+
+ggplot(suntimes,mapping=aes(x=Day,y=Sunrise.CST)) +
+  geom_point() +
+  geom_line(mapping=aes(x=Day,y=sunrise_predicted))
+
+
+```
