@@ -39,8 +39,9 @@ ggplot(suntimes,mapping=aes(x=Day,y=Sunrise.CST)) +
 
 # Influence of the Coefficients
 
-For $$ y = a \sin(bt - c) + d $$ , a is the amplitude, b is the period times 2$$pi$$, c is the phase shift, and d is the vertical shift.
+For $$ y = a \sin(bt - c) + d $$ , a is the amplitude, b is the period times 2$$pi$$, c is the phase shift, and d is the vertical shift. (source: http://jwilson.coe.uga.edu/EMAT6680Fa09/Gonterman/Gonterman1/Gonterman1.html)
 Thus for selecting values for our model:
+
 
 - Let a = mean((max(Sunrise.CST)-mean(Sunrise.CST))+(min(Sunrise.CST)+mean(Sunrise.CST))), or in other words, the average of the distance from the maximum to the mean and from the minimum to the mean
 - Let b = 365/2pi, or a full range of days in a year since that is our period
