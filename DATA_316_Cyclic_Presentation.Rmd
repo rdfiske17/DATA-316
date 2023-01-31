@@ -14,10 +14,12 @@ library(tidyverse)
 # Read in the Sunrise Dataset
 
 ```{r}
+
 suntimes <- read.csv("https://raw.githubusercontent.com/gmtanner-cord/DATA316/main/Data/MoorheadSunriseSunset.csv",stringsAsFactors = TRUE)
 suntimes$Date <- as.Date(suntimes$Date,format="%m/%d/%Y") #https://www.statology.org/convert-strings-to-dates-in-r/
-suntimes <- suntimes %>% mutate(Day=as.POSIXlt(Date)$yday+1) #https://rc2e.com/stringsanddates
+suntimes <- suntimes %>% mutate(Day=as.POSIXlt(Date)$yday) #https://rc2e.com/stringsanddates
 suntimes$Day <- as.integer(suntimes$Day)
+
 ```
 
 # Configure the initial Cyclic statistical model
@@ -69,6 +71,5 @@ suntimes$sunrise_predicted <- predict(sunrise_model)
 ggplot(suntimes,mapping=aes(x=Day,y=Sunrise.CST)) +
   geom_point() +
   geom_line(mapping=aes(x=Day,y=sunrise_predicted))
-
 
 ```
