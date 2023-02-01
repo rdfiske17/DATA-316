@@ -30,7 +30,7 @@ mutate(SunsetHR = floor(Sunset.CST / 100))  %>%
 
 ## The Cyclic/Period Model Overview
 
-The cyclic model is a mathematical model used to capture a trend over a period that repeats itself. Mathematically, these types of trends are typically represented using a sine wave, and the cyclic model uses this. The equation $y = a  sin(bt - c) + d$ is used to model this, with the parameters a, b, c, & d tuned using the nls() function.
+The cyclic model is a mathematical model used to capture a trend over a period that repeats itself. Mathematically, these types of trends are typically represented using a sine wave, and the cyclic model uses this. The equation $y = a  sin(bt - c) + d$ is used to model this, with the parameters *a*, *b*, *c*, & *d* tuned using the nls() function.
 
 Cyclical models are useful for modeling trends that, as the name implies, cycle. The trend repeats itself over time by a given interval. For that reason, the input is almost always time $t$, whether that $t$ be in minutes, hours, days, months, or years. Some real life examples of this would be temperature at 8am over the course of the year, number of birds in the sky in a specific city everyday over the course of the year, or the example we will use, the sunrise and sunset times everyday over the course of one year.
 
@@ -38,14 +38,14 @@ Cyclical models are useful for modeling trends that, as the name implies, cycle.
 
 The four tuning parameters can be described as follows:
 
-* a is the amplitude of the sine wave
-* b is the period times $2\pi$
-* c is the phase/horizontal shift
-* d is the vertical shift
+* *a* is the amplitude of the sine wave
+* *b* is the period times $2\pi$
+* *c* is the phase/horizontal shift
+* *d* is the vertical shift
 
 [Source](http://jwilson.coe.uga.edu/EMAT6680Fa09/Gonterman/Gonterman1/Gonterman1.html)
 
-Additionally, the domain of the model is by default $[0,2\pi]$, but can be manipulated using the b parameter. The maximum of the function is $d + a$ and the minimum is $d + a$. There are also horizontal asymptotes at $d + a$ and $d - a$.
+Additionally, the domain of the model is by default $[0,2\pi]$, but can be manipulated using the *b* parameter. The maximum of the function is $d + a$ and the minimum is $d - a$. There are also horizontal asymptotes at $d + a$ and $d - a$.
 
 ## [Desmos Demonstration](https://www.desmos.com/calculator/6tysciq4cs)
 
@@ -73,7 +73,7 @@ Both the Sunrise and Sunset times seem to follow some sort of cyclical trend. Le
 
 ## Our First Model
 
-We will use the nls function to predict SunriseTime using Day and our four parameters a, b, c, & d. We will then see if the model follows our data.
+We will use the nls function to predict SunriseTime using Day and our four parameters *a*, *b*, *c*, & *d*. We will then see if the model follows our data.
 ```{r}
 
 mod.cyc.sunrise <- nls(SunriseTime ~ a * sin((b * Day) + c) + d,data=suntimes,start=list(a=1,b=1,c=1,d=1))
@@ -86,12 +86,12 @@ ggplot(suntimes,mapping=aes(x=Day,y=SunriseTime)) +
 
 ```
 
-It does not, but if we give it better guesses for where to start for parameters, we should be able to improve the trend.
+It clearly does not follow the desired fit, but if we give it better guesses for where to start for parameters, we should be able to improve the trend.
 
-Recall that b is the period * $2\pi$, and we want our period to be $\frac{2\pi}{365}$. If b=$\frac{1}{2\pi*9.24}$, the period is roughly that.
-d is such that it is equally distanced from the minimum and the maximum, so let d=$\frac{max(SunriseTime)+min(SunriseTime)}{2}$. a is the distance from d to the max and d to the min, so let a=$max(SunriseTime)-d=d-min(SunriseTime)$. Using desmos with the above calculated values, we can estimate c to be about 4.7, which puts the maximum at t=0.
+Recall that *b* is the period * $2\pi$, and we want our period to be $\frac{2\pi}{365}$. If $b=\frac{1}{2\pi*9.24}$, the period is roughly 365 days.
+*d* is such that it is equally distanced from the minimum and the maximum, so let $d=\frac{max(SunriseTime)+min(SunriseTime)}{2}$. *a* is the distance from *d* to the maximum and *d* to the minimum, so let $a=max(SunriseTime)-d=d-min(SunriseTime)$. Using desmos with the above calculated values, we can estimate *c* to be about 4.7, which puts the maximum at $t=0$.
 
-Therefore, a = 1.8633, b = 0.01722, c = 4.7, and d = 6.33667.
+Therefore, *a* = 1.8633, *b* = 0.01722, *c* = 4.7, and *d* = 6.33667.
 
 ## Revised Model for Sunrise
 
@@ -109,20 +109,22 @@ ggplot(suntimes,mapping=aes(x=Day,y=SunriseTime)) +
 
 This fits much better. Let's look at the parameters that it chose for us.
 ```{r}
+
 summary(mod.cyc.sunrise)
 summary(mod.cyc.sunrise)$coefficients
 a <- summary(mod.cyc.sunrise)$coefficients[1,1]
 b <- summary(mod.cyc.sunrise)$coefficients[2,1]
 c <- summary(mod.cyc.sunrise)$coefficients[3,1]
 d <- summary(mod.cyc.sunrise)$coefficients[4,1]
+
 ```
 
 To put these in context:
 
-* a = -1.8 which is the amplitude, or the distance from the average of our minimum and maximum sunrise times, which means that time is 1 hour and 48 minutes
-* b = .0164, which is the period times $2\pi$ of our function, or how long it takes to get from the maximum to the maximum again (one full cycle)
-* c = 4.966, or the horizontal adjustment since a sine graph would typically start at d since $sin(0)+d=0+d=d$
-* d = 6.417, or the vertical adjustment, which is the average of our minimum and maximum sunrise times, which means that time is 6:25
+* *a* = -1.8 which is the amplitude, or the distance from the average of our minimum and maximum sunrise times, which means that time is 1 hour and 48 minutes
+* *b* = .0164, which is the period times $2\pi$ of our function, or how long it takes to get from the maximum to the maximum again (one full cycle)
+* *c* = 4.966, or the horizontal adjustment since a sine graph would typically start at *d* since $sin(0)+d=0+d=d$
+* *d* = 6.417, or the vertical adjustment, which is the average of our minimum and maximum sunrise times, which means that time is 6:25
 
 ## Sunset Trend
 
@@ -145,4 +147,4 @@ ggplot(suntimes,mapping=aes(x=Day,y=SunsetTime)) +
 
 ## Conclusion
 
-Cyclic Models are used to model trends over time that repeat themselves over a given period, usually with input time $t$. We use the function $y=a\sin(bt-c)+d$ to model this, where a is the amplitude, b is the period multiplier, c is the horizontal shift, and d is the vertical shift. We use nls() to map this, and the starting values must be thought of strategically to get the best possible fit for the trend, keeping in mind a logical period, as well as minimums and maximums from the input dataset.
+Cyclic Models are used to model trends over time that repeat themselves over a given period, usually with input time $t$. We use the function $y=a\sin(bt-c)+d$ to model this, where *a* is the amplitude, *b* is the period multiplier, *c* is the horizontal shift, and *d* is the vertical shift. We use nls() to map this, and the starting values must be thought of strategically to get the best possible fit for the trend, keeping in mind a logical period, as well as minimums and maximums from the input dataset.
