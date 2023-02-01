@@ -1,0 +1,71 @@
+---
+title: "Cyclic/Periodic Mathematical Model"
+author: "Riley Fiske, Iyanu Lamina"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+# Read in the Dataset and wrangle data into usable format
+
+```{r}
+suntimes <- read.csv("https://raw.githubusercontent.com/gmtanner-cord/DATA316/main/Data/MoorheadSunriseSunset.csv",stringsAsFactors = TRUE)
+
+suntimes$Date <- as.Date(suntimes$Date,format="%m/%d/%Y") #https://www.statology.org/convert-strings-to-dates-in-r/
+suntimes <- suntimes %>% mutate(Day=as.POSIXlt(Date)$yday) #https://rc2e.com/stringsanddates
+suntimes$Day <- as.integer(suntimes$Day)
+
+suntimes <- suntimes %>% mutate(SunriseHR = floor(Sunrise.CST / 100))  %>%
+  mutate(SunriseMin = Sunrise.CST - 100 * SunriseHR) %>%
+mutate(SunsetHR = floor(Sunset.CST / 100))  %>% 
+  mutate(SunsetMin = Sunset.CST - 100 * SunsetHR) %>%
+  mutate(SunriseTime = SunriseHR + SunriseMin / 60) %>%
+ mutate(SunsetTime = SunsetHR + SunsetMin / 60)
+```
+
+# The Cyclic/Period Model Overview
+
+The cyclic model is a mathematical model used to capture a trend over a period that repeats itself. Mathematically, these types of trends are typically represented using a sine wave, and the cyclic model uses this. The equation $y = a  sin(bt - c) + d$ is used to model this, with the parameters a, b, c, & d tuned using the glm() function.
+
+# Parameter Interpretation and Mathematical Characteristics
+
+The four tuning parameters can be described as follows:
+
+* a is the amplitude of the sine wave
+* b is the period times $2\pi$
+* c is the phase/horizontal shift
+* d is the vertical shift
+
+[Source](http://jwilson.coe.uga.edu/EMAT6680Fa09/Gonterman/Gonterman1/Gonterman1.html)
+
+Additionally, the domain of the model is by default $[0,2\pi]$, but can be manipulated using the b parameter. The maximum of the function is $d + a$ and the minimum is $d + a$. There are also horizontal asymptotes at $d + a$ and $d - a$.
+
+# [Desmos Demonstration](https://www.desmos.com/calculator/ueu84lwtkn)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Visualization of Moorhead Sunrise/Sunset Data
+```{r}
+
+ggplot(suntimes,aes(x=Date))+
+  labs(title = "Moorhead Sunrise Times",
+       x = "Date",
+       y ="Sunrise times (by hour)")+
+  geom_line(aes(y=SunriseTime))
+
+```

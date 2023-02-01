@@ -10,6 +10,7 @@ library(tidyverse)
 library(lubridate)
 ```
 ```{r}
+
 MoorheadSunriseSunset <- read_csv("https://raw.githubusercontent.com/gmtanner-cord/DATA316/main/Data/MoorheadSunriseSunset.csv") %>%
   mutate(across(Date,parse_date,format="%m/%d/%Y")) %>%
 mutate(SunriseHR =floor(`Sunrise CST`/100))  %>%
