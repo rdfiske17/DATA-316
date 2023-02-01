@@ -41,7 +41,7 @@ ggplot(MoorheadSunriseSunset,aes(x=Date))+
 $$ y = a \sin(bt - c) + d $$
 `data= MoorheadSunriseSunset`
 `start=list(a= amplitide b=2π/b, c=horizontal shift , d=vertical shift)`
-##formular: `Sunrise_CST ~ a+d sin(2π/b(x-c))`
+##formular: `Sunrise_CST ~ d+a sin(b*DOY-c))`
 
 
 ```{r}
