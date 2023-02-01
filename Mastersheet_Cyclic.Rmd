@@ -47,7 +47,7 @@ The four tuning parameters can be described as follows:
 
 Additionally, the domain of the model is by default $[0,2\pi]$, but can be manipulated using the b parameter. The maximum of the function is $d + a$ and the minimum is $d + a$. There are also horizontal asymptotes at $d + a$ and $d - a$.
 
-## [Desmos Demonstration](https://www.desmos.com/calculator/ueu84lwtkn)
+## [Desmos Demonstration](https://www.desmos.com/calculator/6tysciq4cs)
 
 
 # **Application**
