@@ -1,0 +1,73 @@
+---
+title: "Poisson Model"
+author: "Emily, Bryan, Iyanu, Riley"
+date: "2023-01-26"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+```
+
+# Model Characteristics
+
+Lambda is the expected value and the variance:
+
+![{\\displaystyle \\lambda =\\operatorname {E} (X)=\\operatorname {Var} (X).}](https://wikimedia.org/api/rest_v1/media/math/render/svg/2debd3f9adf97c8af4919aa69ed4a7121b47a737){alt="{\\displaystyle \\lambda =\\operatorname {E} (X)=\\operatorname {Var} (X).}"}
+
+This is the mass density function:
+
+![{\\displaystyle f(k;\\lambda )=\\Pr(X{=}k)={\\frac {\\lambda \^{k}e\^{-\\lambda }}{k!}},}](https://wikimedia.org/api/rest_v1/media/math/render/svg/7a0693ecaa606e3878dfa9a85552d357c690ffb9){alt="{\\displaystyle f(k;\\lambda )=\\Pr(X{=}k)={\\frac {\\lambda ^{k}e^{-\\lambda }}{k!}},}"} ![k](https://cdn.scribbr.com/wp-content/ql-cache/quicklatex.com-72a1d81e9adfd8409a0109ad9d64dfc3_l3.png "Rendered by QuickLaTeX.com"){alt="k"} is number of times an event occurs
+
+![P(X = k](https://cdn.scribbr.com/wp-content/ql-cache/quicklatex.com-5f47e2a64cf91e5adc4a94a4de98625d_l3.png "Rendered by QuickLaTeX.com"){alt="P(X = k"}) is the probability that an event will occur *k* times
+
+![e](https://cdn.scribbr.com/wp-content/ql-cache/quicklatex.com-74b065ec9b5113d3a0f449ad1c2d65ed_l3.png "Rendered by QuickLaTeX.com"){alt="e"} is Euler's constant
+
+![\\lambda](https://cdn.scribbr.com/wp-content/ql-cache/quicklatex.com-43bb674c0bb3692bb4248717908ecfd0_l3.png "Rendered by QuickLaTeX.com"){alt="\\lambda"} is the average number of times an event occurs
+
+! is the factorial function
+
+# Type of data to use
+
+The poisson distribution calculates the probability of an event occurring in a known span of time or space. As long as the time or space is constant, like every minute or at every mile, this distribution can be used.
+
+This is a discrete distribution and should only be used to predict the probability of one kind of event occurring. Events can be anything like the amount of calls received every minute or the amount of purchases made in an hour.
+
+Like the binomial distribution, all events have to be independent. Someone calling a call center is not dependent on who else has called the call center.
+
+The last thing needed to use the Poisson distribution is the average number of events occurring in the time or space frame. This is the only parameter, lambda.
+
+# Visualize the mass/density function
+
+```{r}
+range <- 0:20
+lambda_range <- 1:10
+
+for (lambda in lambda_range)
+{
+  plot( range,dpois(range,lambda), type = "b", main = c("lambda = ",lambda), ylab = "probability of event", xlab = "number of times the event occurrs")
+  
+ 
+}
+
+```
+
+# Interpreting the parameters
+
+The peak of the distribution represents the most probable number of events (mean).
+
+If the distribution is longer on the right side of its peak than its left, then the lambda is low. For instance, the graphs of the probability lambda 2, 3, 4, 5 and 6 above are right-skewed.
+
+On the other hand, if the distribution is much longer on the left side of its peak then its right, then the lambda increases and looks similar to a normal distribution.
+
+The mean and variance are represented by lambda (λ). This differs from most distributions that use σ² and µ.
+
+# Sources:
+
+Most of this information was gathered from outside sources.
+
+Scribblr: <https://www.scribbr.com/statistics/poisson-distribution/>
+
+Wikipedia: <https://en.wikipedia.org/wiki/Poisson_distribution#:~:text=In%20probability%20theory%20and%20statistics,time%20since%20the%20last%20event.>
